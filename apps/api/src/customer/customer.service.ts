@@ -36,11 +36,24 @@ export class CustomerService {
   async findAll(options: FindAllOptions) {
     const { page, limit, search } = options;
 
+    const whereConditions: any = {
+      deletedAt: null,
+    };
+
+    if (search) {
+      whereConditions["OR"] = [
+        { firstName: Like(`%${search}%`) },
+        { lastName: Like(`%${search}%`) },
+      ];
+    }
+
     const [items, total] = await this.customerRepository.findAndCount({
-      where: {
-        ...(search ? { fullName: Like(`%${search}%`) } : {}),
-        deletedAt: null,
-      },
+      where: whereConditions["OR"]
+        ? [
+            { firstName: Like(`%${search}%`), deletedAt: null },
+            { lastName: Like(`%${search}%`), deletedAt: null },
+          ]
+        : { deletedAt: null },
       skip: (page - 1) * limit,
       take: limit,
       order: { id: "ASC" },

@@ -24,7 +24,7 @@ export class CustomerEntity {
   @Column()
   email: string;
 
-  @Column({ length: 10 })
+  @Column({ length: 15 })
   phoneNumber: string;
 
   @Column()

@@ -1,9 +1,9 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-const API_URL = `${process.env.API_BASE_URL}/api/warehouses`;
+const API_URL = `${process.env.API_BASE_URL}/api/customers`;
 
-// PATCH warehouse by ID
+// PATCH customer by ID
 export async function PATCH(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
@@ -23,19 +23,19 @@ export async function PATCH(
             },
             body: JSON.stringify(body)
         });
-        const warehouse = await res.json();
+        const customer = await res.json();
 
-        return NextResponse.json(warehouse, { status: res.status });
+        return NextResponse.json(customer, { status: res.status });
     } catch (error) {
-        console.error('PATCH /warehouses error:', error);
+        console.error('PATCH /customers error:', error);
         return NextResponse.json(
-            { error: 'Failed to update warehouse' },
+            { error: 'Failed to update customer' },
             { status: 500 }
         );
     }
 }
 
-// DELETE warehouse by ID
+// DELETE customer by ID
 export async function DELETE(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
@@ -53,13 +53,13 @@ export async function DELETE(
                 'Content-Type': 'application/json'
             }
         });
-        const warehouse = await res.json();
+        const customer = await res.json();
 
-        return NextResponse.json(warehouse, { status: res.status });
+        return NextResponse.json(customer, { status: res.status });
     } catch (error) {
-        console.error('DELETE /warehouses error:', error);
+        console.error('DELETE /customers error:', error);
         return NextResponse.json(
-            { error: 'Failed to delete warehouse' },
+            { error: 'Failed to delete customer' },
             { status: 500 }
         );
     }

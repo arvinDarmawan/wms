@@ -15,8 +15,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
-//await import('yup-phone');
-
 interface Customer {
     id: number;
     code: string;
@@ -102,7 +100,7 @@ export default function CustomerPage() {
         async (pageNumber = 1, searchQuery = '') => {
             try {
                 const res = await fetch(
-                    `http://localhost:3001/api/customers?page=${pageNumber}&limit=${limit}&search=${searchQuery}`
+                    `/api/customers?page=${pageNumber}&limit=${limit}&search=${searchQuery}`
                 );
                 if (!res.ok) throw new Error('Failed to fetch customers');
 
@@ -155,10 +153,9 @@ export default function CustomerPage() {
     const confirmDelete = async () => {
         if (!itemToDelete) return;
         try {
-            const res = await fetch(
-                `http://localhost:3001/api/customers/${itemToDelete.id}`,
-                { method: 'DELETE' }
-            );
+            const res = await fetch(`/api/customers/${itemToDelete.id}`, {
+                method: 'DELETE'
+            });
             if (!res.ok) throw new Error('Failed to delete customer');
 
             await res.json();
@@ -175,14 +172,11 @@ export default function CustomerPage() {
     const onSubmit = async (data: CustomerForm) => {
         if (isEditing && selectedItem) {
             try {
-                const res = await fetch(
-                    `http://localhost:3001/api/customers/${selectedItem.id}`,
-                    {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    }
-                );
+                const res = await fetch(`/api/customers/${selectedItem.id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
                 if (!res.ok) throw new Error('Failed to update customer');
                 await res.json();
             } catch (err) {
@@ -191,7 +185,7 @@ export default function CustomerPage() {
             }
         } else {
             try {
-                const res = await fetch('http://localhost:3001/api/customers', {
+                const res = await fetch('/api/customers', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)

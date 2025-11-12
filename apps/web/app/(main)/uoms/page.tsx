@@ -73,7 +73,7 @@ export default function UomPage() {
         async (pageNumber = 1, searchQuery = '') => {
             try {
                 const res = await fetch(
-                    `http://localhost:3001/api/uoms?page=${pageNumber}&limit=${limit}&search=${searchQuery}`
+                    `/api/uoms?page=${pageNumber}&limit=${limit}&search=${searchQuery}`
                 );
                 if (!res.ok) throw new Error('Failed to fetch uoms');
 
@@ -122,10 +122,9 @@ export default function UomPage() {
     const confirmDelete = async () => {
         if (!itemToDelete) return;
         try {
-            const res = await fetch(
-                `http://localhost:3001/api/uoms/${itemToDelete.id}`,
-                { method: 'DELETE' }
-            );
+            const res = await fetch(`/api/uoms/${itemToDelete.id}`, {
+                method: 'DELETE'
+            });
             if (!res.ok) throw new Error('Failed to delete uom');
 
             await res.json();
@@ -142,14 +141,11 @@ export default function UomPage() {
     const onSubmit = async (data: UomForm) => {
         if (isEditing && selectedItem) {
             try {
-                const res = await fetch(
-                    `http://localhost:3001/api/uoms/${selectedItem.id}`,
-                    {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    }
-                );
+                const res = await fetch(`/api/uoms/${selectedItem.id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
                 if (!res.ok) throw new Error('Failed to update uom');
                 await res.json();
             } catch (err) {
@@ -158,7 +154,7 @@ export default function UomPage() {
             }
         } else {
             try {
-                const res = await fetch('http://localhost:3001/api/uoms', {
+                const res = await fetch('/api/uoms', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)

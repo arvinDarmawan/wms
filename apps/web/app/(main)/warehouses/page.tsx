@@ -74,12 +74,13 @@ export default function WarehousePage() {
         async (pageNumber = 1, searchQuery = '') => {
             try {
                 const res = await fetch(
-                    `http://localhost:3001/api/warehouses?page=${pageNumber}&limit=${limit}&search=${searchQuery}`
+                    `/api/warehouses?page=${pageNumber}&limit=${limit}&search=${searchQuery}`
                 );
+
                 if (!res.ok) throw new Error('Failed to fetch warehouses');
 
                 const response = await res.json();
-                setWarehouses(response.data);
+                setWarehouses(response.data || []);
                 setTotal(response.total || 0);
                 setPage(response.page || 1);
             } catch (err) {
@@ -118,10 +119,9 @@ export default function WarehousePage() {
     const confirmDelete = async () => {
         if (!warehouseToDelete) return;
         try {
-            const res = await fetch(
-                `http://localhost:3001/api/warehouses/${warehouseToDelete.id}`,
-                { method: 'DELETE' }
-            );
+            const res = await fetch(`/api/warehouses/${warehouseToDelete.id}`, {
+                method: 'DELETE'
+            });
             if (!res.ok) throw new Error('Failed to delete warehouse');
 
             await res.json();
@@ -139,7 +139,7 @@ export default function WarehousePage() {
         if (isEditing && selectedWarehouse) {
             try {
                 const res = await fetch(
-                    `http://localhost:3001/api/warehouses/${selectedWarehouse.id}`,
+                    `/api/warehouses/${selectedWarehouse.id}`,
                     {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
@@ -147,6 +147,7 @@ export default function WarehousePage() {
                     }
                 );
                 if (!res.ok) throw new Error('Failed to update warehouse');
+
                 await res.json();
             } catch (err) {
                 console.error(err);
@@ -154,14 +155,11 @@ export default function WarehousePage() {
             }
         } else {
             try {
-                const res = await fetch(
-                    'http://localhost:3001/api/warehouses',
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    }
-                );
+                const res = await fetch('/api/warehouses', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
                 if (!res.ok) throw new Error('Failed to create warehouse');
 
                 await res.json();

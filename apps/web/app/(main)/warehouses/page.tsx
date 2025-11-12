@@ -52,8 +52,12 @@ export default function WarehousePage() {
     ];
 
     const schema = Yup.object().shape({
-        code: Yup.string().required('Code is required'),
-        name: Yup.string().required('Name is required'),
+        code: Yup.string()
+            .required('Code is required')
+            .max(8, 'Code must be at most 8 characters'),
+        name: Yup.string()
+            .required('Name is required')
+            .max(30, 'Name must be at most 30 characters'),
         address: Yup.string().required('Address is required')
     });
 

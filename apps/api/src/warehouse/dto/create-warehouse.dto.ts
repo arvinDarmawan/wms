@@ -1,14 +1,16 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString, MaxLength } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateWarehouseDto {
   @IsNotEmpty()
   @IsString()
+  @MaxLength(8, { message: "Code must be at most 8 characters" })
   @ApiProperty({ description: "The code of the warehouse" })
   code: string;
 
   @IsNotEmpty()
   @IsString()
+  @MaxLength(30, { message: "Name must be at most 30 characters" })
   @ApiProperty({ description: "The name of the warehouse" })
   name: string;
 

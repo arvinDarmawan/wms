@@ -21,7 +21,16 @@ export class WarehouseService {
   async create(
     createWarehouseDto: CreateWarehouseDto
   ): Promise<WarehouseEntity> {
-    const data = this.warehouseRepository.create(createWarehouseDto);
+    // Count total warehouses
+    const totalWarehouses = await this.warehouseRepository.count();
+
+    // Generate new number
+    const warehouseNumber = totalWarehouses + 1;
+
+    const data = this.warehouseRepository.create({
+      ...createWarehouseDto,
+      code: `WH-${warehouseNumber.toString().padStart(3, "0")}`,
+    });
 
     return this.warehouseRepository.save(data);
   }

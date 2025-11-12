@@ -22,7 +22,7 @@ interface Warehouse {
     address: string;
 }
 
-type WarehouseForm = Omit<Warehouse, 'id'> & { id?: number };
+type WarehouseForm = Omit<Warehouse, 'id' | 'code'> & { id?: number };
 
 export default function WarehousePage() {
     const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
@@ -52,9 +52,6 @@ export default function WarehousePage() {
     ];
 
     const schema = Yup.object().shape({
-        code: Yup.string()
-            .required('Code is required')
-            .max(8, 'Code must be at most 8 characters'),
         name: Yup.string()
             .required('Name is required')
             .max(30, 'Name must be at most 30 characters'),
@@ -68,7 +65,7 @@ export default function WarehousePage() {
         formState: { errors }
     } = useForm<WarehouseForm>({
         resolver: yupResolver(schema),
-        defaultValues: { code: '', name: '', address: '' },
+        defaultValues: { name: '', address: '' },
         mode: 'onSubmit'
     });
 
@@ -99,7 +96,7 @@ export default function WarehousePage() {
 
     useEffect(() => {
         if (isOpen) {
-            reset(selectedWarehouse ?? { code: '', name: '', address: '' });
+            reset(selectedWarehouse ?? { name: '', address: '' });
         }
     }, [isOpen, selectedWarehouse, reset]);
 
@@ -216,21 +213,6 @@ export default function WarehousePage() {
                     </h4>
 
                     <div className="grid grid-cols-1 gap-x-6 gap-y-5">
-                        <div>
-                            <Label>Code</Label>
-                            <Input
-                                type="text"
-                                {...register('code')}
-                                placeholder="Code"
-                                error={!!errors.code}
-                            />
-                            {errors.code && (
-                                <p className="text-red-500 text-sm mt-1">
-                                    {errors.code.message}
-                                </p>
-                            )}
-                        </div>
-
                         <div>
                             <Label>Name</Label>
                             <Input

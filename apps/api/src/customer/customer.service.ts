@@ -71,8 +71,9 @@ export class CustomerService {
     });
 
     if (!data) {
-      throw new HttpException("Customer Not Found", 404);
+      throw new HttpException("Customer not found", 404);
     }
+
     return data;
   }
 

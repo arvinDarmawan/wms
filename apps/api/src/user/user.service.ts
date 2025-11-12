@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -30,18 +30,26 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const existingUser = await this.findOneByEmail(createUserDto.email);
+    if (existingUser) {
+      throw new HttpException(
+        "Email already registered before",
+        HttpStatus.BAD_REQUEST
+      );
+    }
+
     // Generate a random password
     const randomPassword = this.generateRandomPassword();
 
     // Hash the generated password
     const passwordHash = await bcrypt.hash(randomPassword, 10);
 
-    const data = this.userRepository.create({
+    const newUser = this.userRepository.create({
       ...createUserDto,
       passwordHash,
     });
 
-    return this.userRepository.save(data);
+    return this.userRepository.save(newUser);
   }
 
   async findAll(options: FindAllOptions) {
@@ -61,17 +69,31 @@ export class UserService {
   }
 
   async findOne(id: number): Promise<UserEntity> {
-    const userData = await this.userRepository.findOne({
+    const data = await this.userRepository.findOne({
       where: {
         id,
         deletedAt: null,
       },
     });
 
-    if (!userData) {
-      throw new HttpException("User Not Found", 404);
+    if (!data) {
+      throw new HttpException("User not found", 404);
     }
-    return userData;
+    return data;
+  }
+
+  async findOneByEmail(email: string): Promise<UserEntity> {
+    const data = await this.userRepository.findOne({
+      where: {
+        email,
+        deletedAt: null,
+      },
+    });
+
+    if (!data) {
+      throw new HttpException("User not found", 404);
+    }
+    return data;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {

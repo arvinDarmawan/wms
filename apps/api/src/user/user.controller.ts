@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -18,67 +19,64 @@ export class UserController {
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     try {
-      await this.userService.create(createUserDto);
-
-      return {
-        success: true,
-        message: "User Created Successfully",
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.message,
-      };
+      const user = await this.userService.create(createUserDto);
+      return user;
+    } catch (e) {
+      //add log later
+      throw e;
     }
   }
 
   @Get()
-  async findAll() {
+  async findAll(
+    @Query("page") page = "1",
+    @Query("limit") limit = "10",
+    @Query("search") search = ""
+  ) {
     try {
-      const data = await this.userService.findAll();
+      const pageNumber = parseInt(page, 10);
+      const limitNumber = parseInt(limit, 10);
+
+      const data = await this.userService.findAll({
+        page: pageNumber,
+        limit: limitNumber,
+        search: search.toString(),
+      });
+
       return {
-        success: true,
-        data,
-        message: "User Fetched Successfully",
+        data: data.items,
+        meta: {
+          total: data.total,
+          page: pageNumber,
+          limit: limitNumber,
+        },
       };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.message,
-      };
+    } catch (e) {
+      //add log later
+      throw e;
     }
   }
 
   @Get(":id")
   async findOne(@Param("id") id: string) {
     try {
-      const data = await this.userService.findOne(+id);
-      return {
-        success: true,
-        data,
-        message: "User Fetched Successfully",
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.message,
-      };
+      const user = await this.userService.findOne(+id);
+
+      return user;
+    } catch (e) {
+      //add log later
+      throw e;
     }
   }
 
   @Patch(":id")
   async update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
     try {
-      await this.userService.update(+id, updateUserDto);
-      return {
-        success: true,
-        message: "User Updated Successfully",
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.message,
-      };
+      const user = await this.userService.update(+id, updateUserDto);
+      return user;
+    } catch (e) {
+      //add log later
+      throw e;
     }
   }
 
@@ -86,15 +84,10 @@ export class UserController {
   async remove(@Param("id") id: string) {
     try {
       await this.userService.remove(+id);
-      return {
-        success: true,
-        message: "User Deleted Successfully",
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.message,
-      };
+      return true;
+    } catch (e) {
+      //add log later
+      throw e;
     }
   }
 }

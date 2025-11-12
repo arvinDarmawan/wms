@@ -5,6 +5,8 @@ import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { configService } from "./config/config.service";
 
 import { AppModule } from "./app.module";
+import { ResponseInterceptor } from "./common/interceptors/response.interceptor";
+import { GlobalExceptionFilter } from "./common/filters/global-exception.filter";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,6 +28,9 @@ async function bootstrap() {
   app.enableVersioning({
     type: VersioningType.URI,
   });
+
+  app.useGlobalInterceptors(new ResponseInterceptor());
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   app.enableCors({
     origin: configService.isProduction()

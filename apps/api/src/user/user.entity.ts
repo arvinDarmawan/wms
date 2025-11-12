@@ -4,6 +4,7 @@ import {
   Column,
   UpdateDateColumn,
   CreateDateColumn,
+  DeleteDateColumn,
 } from "typeorm";
 
 @Entity("users")
@@ -25,4 +26,7 @@ export class UserEntity {
 
   @UpdateDateColumn({ type: "timestamp with time zone", nullable: true })
   updatedAt: Date;
+
+  @DeleteDateColumn({ type: "timestamp with time zone", nullable: true })
+  deletedAt: Date | null;
 }

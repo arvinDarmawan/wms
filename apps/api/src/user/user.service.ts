@@ -48,11 +48,10 @@ export class UserService {
     const { page, limit, search } = options;
 
     const [items, total] = await this.userRepository.findAndCount({
-      where: search
-        ? {
-            fullName: Like(`%${search}%`),
-          }
-        : {},
+      where: {
+        ...(search ? { fullName: Like(`%${search}%`) } : {}),
+        deletedAt: null,
+      },
       skip: (page - 1) * limit,
       take: limit,
       order: { id: "ASC" },
@@ -62,7 +61,13 @@ export class UserService {
   }
 
   async findOne(id: number): Promise<UserEntity> {
-    const userData = await this.userRepository.findOneBy({ id });
+    const userData = await this.userRepository.findOne({
+      where: {
+        id,
+        deletedAt: null,
+      },
+    });
+
     if (!userData) {
       throw new HttpException("User Not Found", 404);
     }
@@ -79,6 +84,8 @@ export class UserService {
   async remove(id: number): Promise<UserEntity> {
     const existingUser = await this.findOne(id);
 
-    return await this.userRepository.remove(existingUser);
+    await this.userRepository.softDelete(id);
+
+    return existingUser;
   }
 }

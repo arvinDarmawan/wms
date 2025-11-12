@@ -20,7 +20,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
             isOpen={isOpen}
             onClose={onClose}
             className="max-w-[400px] p-5 lg:p-10">
-            <h4 className="mb-4 text-lg font-medium text-gray-800 dark:text-white/90">
+            <h4 className="mb-4 text-lg font-medium text-gray-800">
                 Confirm Delete
             </h4>
             <p>Are you sure you want to delete this data ?</p>

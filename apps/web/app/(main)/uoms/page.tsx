@@ -209,7 +209,7 @@ export default function UomPage() {
                 onClose={closeModal}
                 className="max-w-[584px] p-5 lg:p-10">
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <h4 className="mb-6 text-lg font-medium text-gray-800 dark:text-white/90">
+                    <h4 className="mb-6 text-lg font-medium text-gray-800">
                         {isEditing ? 'Edit Uom' : 'Add Uom'}
                     </h4>
 

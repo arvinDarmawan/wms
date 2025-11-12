@@ -114,7 +114,7 @@ const AppSidebar: React.FC = () => {
 
     return (
         <aside
-            className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
+            className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
         ${
             isExpanded || isMobileOpen
                 ? 'w-[290px]'
@@ -135,10 +135,10 @@ const AppSidebar: React.FC = () => {
                 <div className="flex flex-col">
                     {isExpanded || isHovered || isMobileOpen ? (
                         <>
-                            <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
+                            <span className="block font-medium text-gray-700 text-theme-sm">
                                 Musharof Chowdhury
                             </span>
-                            <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
+                            <span className="mt-0.5 block text-theme-xs text-gray-500">
                                 randomuser@pimjo.com
                             </span>
                         </>

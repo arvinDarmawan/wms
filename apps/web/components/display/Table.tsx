@@ -32,35 +32,35 @@ const Table = <T,>({
     return (
         <div className="w-full overflow-x-auto">
             <table className="min-w-full border border-gray-300 rounded-lg">
-                <thead className="border-b border-gray-100 dark:border-white/5">
+                <thead className="border-b border-gray-100">
                     <tr>
                         {columns.map((col) => (
                             <th
                                 key={String(col.key)}
-                                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs">
                                 {col.label}
                             </th>
                         ))}
                         {renderActions && (
-                            <th className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
+                            <th className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs">
                                 Actions
                             </th>
                         )}
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100 dark:divide-white/5">
+                <tbody className="divide-y divide-gray-100">
                     {currentRows.length > 0 ? (
                         currentRows.map((row, rowIndex) => (
                             <tr key={rowIndex}>
                                 {columns.map((col) => (
                                     <td
                                         key={String(col.key)}
-                                        className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                        className="px-4 py-3 text-gray-500 text-start text-theme-sm">
                                         {String(row[col.key])}
                                     </td>
                                 ))}
                                 {renderActions && (
-                                    <td className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                    <td className="px-4 py-3 text-gray-500 text-start text-theme-sm">
                                         {renderActions(row)}
                                     </td>
                                 )}
@@ -72,7 +72,7 @@ const Table = <T,>({
                                 colSpan={
                                     columns.length + (renderActions ? 1 : 0)
                                 }
-                                className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
+                                className="px-4 py-3 text-gray-500 text-center text-theme-sm">
                                 No data available
                             </td>
                         </tr>

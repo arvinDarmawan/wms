@@ -7,6 +7,7 @@ import Card from '@/components/display/Card';
 import Table from '@/components/display/Table';
 import Input from '@/components/input/InputField';
 import Label from '@/components/input/Label';
+import TextArea from '@/components/input/Textarea';
 import { useModal } from '@/hooks/useModal';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { PlusIcon } from 'lucide-react';
@@ -14,24 +15,27 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
-interface User {
+interface Warehouse {
     id: number;
-    fullName: string;
-    email: string;
+    code: string;
+    name: string;
+    address: string;
 }
 
-type UserForm = Omit<User, 'id'> & { id?: number };
+type WarehouseForm = Omit<Warehouse, 'id'> & { id?: number };
 
-export default function UserPage() {
-    const [users, setUsers] = useState<User[]>([]);
+export default function WarehousePage() {
+    const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
     const [limit] = useState(10);
     const [search] = useState('');
 
-    const [selectedUser, setSelectedUser] = useState<User | null>(null);
-    const [userToDelete, setUserToDelete] = useState<User | null>(null);
-    const isEditing = !!selectedUser;
+    const [selectedWarehouse, setSelectedWarehouse] =
+        useState<Warehouse | null>(null);
+    const [warehouseToDelete, setWarehouseToDelete] =
+        useState<Warehouse | null>(null);
+    const isEditing = !!selectedWarehouse;
 
     const { isOpen, openModal, closeModal } = useModal();
     const {
@@ -40,15 +44,17 @@ export default function UserPage() {
         closeModal: closeDeleteModal
     } = useModal();
 
-    const columns: { key: keyof User; label: string }[] = [
+    const columns: { key: keyof Warehouse; label: string }[] = [
         { key: 'id', label: 'ID' },
-        { key: 'fullName', label: 'Name' },
-        { key: 'email', label: 'Email' }
+        { key: 'code', label: 'Code' },
+        { key: 'name', label: 'Name' },
+        { key: 'address', label: 'Address' }
     ];
 
     const schema = Yup.object().shape({
-        fullName: Yup.string().required('Name is required'),
-        email: Yup.string().email('Invalid email').required('Email is required')
+        code: Yup.string().required('Code is required'),
+        name: Yup.string().required('Name is required'),
+        address: Yup.string().required('Address is required')
     });
 
     const {
@@ -56,134 +62,138 @@ export default function UserPage() {
         handleSubmit,
         reset,
         formState: { errors }
-    } = useForm<UserForm>({
+    } = useForm<WarehouseForm>({
         resolver: yupResolver(schema),
-        defaultValues: { fullName: '', email: '' },
+        defaultValues: { code: '', name: '', address: '' },
         mode: 'onSubmit'
     });
 
-    // Fetch users
-    const fetchUsers = useCallback(
+    // Fetch warehouses
+    const fetchWarehouses = useCallback(
         async (pageNumber = 1, searchQuery = '') => {
             try {
                 const res = await fetch(
-                    `http://localhost:3001/api/users?page=${pageNumber}&limit=${limit}&search=${searchQuery}`
+                    `http://localhost:3001/api/warehouses?page=${pageNumber}&limit=${limit}&search=${searchQuery}`
                 );
-                if (!res.ok) throw new Error('Failed to fetch users');
+                if (!res.ok) throw new Error('Failed to fetch warehouses');
 
                 const response = await res.json();
-                setUsers(response.data);
+                setWarehouses(response.data);
                 setTotal(response.total || 0);
                 setPage(response.page || 1);
             } catch (err) {
                 console.error(err);
-                alert('Error fetching users');
+                alert('Error fetching warehouses');
             }
         },
         [limit]
     );
 
     useEffect(() => {
-        fetchUsers(page, search);
-    }, [fetchUsers, page, search]);
+        fetchWarehouses(page, search);
+    }, [fetchWarehouses, page, search]);
 
     useEffect(() => {
         if (isOpen) {
-            reset(selectedUser ?? { fullName: '', email: '' });
+            reset(selectedWarehouse ?? { code: '', name: '', address: '' });
         }
-    }, [isOpen, selectedUser, reset]);
+    }, [isOpen, selectedWarehouse, reset]);
 
     const handleAdd = () => {
-        setSelectedUser(null);
+        setSelectedWarehouse(null);
         openModal();
     };
 
-    const handleEdit = (user: User) => {
-        setSelectedUser(user);
+    const handleEdit = (warehouse: Warehouse) => {
+        setSelectedWarehouse(warehouse);
         openModal();
     };
 
-    const handleDelete = (user: User) => {
-        setUserToDelete(user);
+    const handleDelete = (warehouse: Warehouse) => {
+        setWarehouseToDelete(warehouse);
         openDeleteModal();
     };
 
     const confirmDelete = async () => {
-        if (!userToDelete) return;
+        if (!warehouseToDelete) return;
         try {
             const res = await fetch(
-                `http://localhost:3001/api/users/${userToDelete.id}`,
+                `http://localhost:3001/api/warehouses/${warehouseToDelete.id}`,
                 { method: 'DELETE' }
             );
-            if (!res.ok) throw new Error('Failed to delete user');
+            if (!res.ok) throw new Error('Failed to delete warehouse');
+
             await res.json();
-            fetchUsers(page, search);
+            fetchWarehouses(page, search);
         } catch (err) {
             console.error(err);
-            alert('Error deleting user');
+            alert('Error deleting warehouse');
         } finally {
             closeDeleteModal();
-            setUserToDelete(null);
+            setWarehouseToDelete(null);
         }
     };
 
-    const onSubmit = async (data: UserForm) => {
-        if (isEditing && selectedUser) {
+    const onSubmit = async (data: WarehouseForm) => {
+        if (isEditing && selectedWarehouse) {
             try {
                 const res = await fetch(
-                    `http://localhost:3001/api/users/${selectedUser.id}`,
+                    `http://localhost:3001/api/warehouses/${selectedWarehouse.id}`,
                     {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(data)
                     }
                 );
-                if (!res.ok) throw new Error('Failed to update user');
+                if (!res.ok) throw new Error('Failed to update warehouse');
                 await res.json();
             } catch (err) {
                 console.error(err);
-                alert('Error updating user');
+                alert('Error updating warehouse');
             }
         } else {
             try {
-                const res = await fetch('http://localhost:3001/api/users', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                if (!res.ok) throw new Error('Failed to create user');
+                const res = await fetch(
+                    'http://localhost:3001/api/warehouses',
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    }
+                );
+                if (!res.ok) throw new Error('Failed to create warehouse');
 
                 await res.json();
             } catch (err) {
                 console.error(err);
-                alert('Error creating user');
+                alert('Error creating warehouse');
             }
         }
 
         closeModal();
-        fetchUsers(page, search);
+        fetchWarehouses(page, search);
     };
 
     return (
-        <Card title="Users">
+        <Card title="Warehouses">
             <div className="space-y-6">
                 <Button size="sm" startIcon={<PlusIcon />} onClick={handleAdd}>
                     Add
                 </Button>
                 <Table
-                    data={users}
+                    data={warehouses}
                     columns={columns}
                     total={total}
                     rowsPerPage={limit}
-                    renderActions={(user) => (
+                    renderActions={(warehouse) => (
                         <div className="flex gap-2">
                             <button
-                                onClick={() => handleEdit(user)}
+                                onClick={() => handleEdit(warehouse)}
                                 className="px-2 py-1 bg-blue-500 text-white rounded">
                                 Edit
                             </button>
                             <button
-                                onClick={() => handleDelete(user)}
+                                onClick={() => handleDelete(warehouse)}
                                 className="px-2 py-1 bg-red-500 text-white rounded">
                                 Delete
                             </button>
@@ -198,36 +208,49 @@ export default function UserPage() {
                 className="max-w-[584px] p-5 lg:p-10">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <h4 className="mb-6 text-lg font-medium text-gray-800 dark:text-white/90">
-                        {isEditing ? 'Edit User' : 'Add User'}
+                        {isEditing ? 'Edit Warehouse' : 'Add Warehouse'}
                     </h4>
 
                     <div className="grid grid-cols-1 gap-x-6 gap-y-5">
                         <div>
-                            <Label>Full name</Label>
+                            <Label>Code</Label>
                             <Input
                                 type="text"
-                                {...register('fullName')}
-                                placeholder="Full name"
-                                error={!!errors.fullName}
+                                {...register('code')}
+                                placeholder="Code"
+                                error={!!errors.code}
                             />
-                            {errors.fullName && (
+                            {errors.code && (
                                 <p className="text-red-500 text-sm mt-1">
-                                    {errors.fullName.message}
+                                    {errors.code.message}
                                 </p>
                             )}
                         </div>
 
                         <div>
-                            <Label>Email</Label>
+                            <Label>Name</Label>
                             <Input
-                                type="email"
-                                {...register('email')}
-                                placeholder="Email"
-                                error={!!errors.email}
+                                type="text"
+                                {...register('name')}
+                                placeholder="Name"
+                                error={!!errors.name}
                             />
-                            {errors.email && (
+                            {errors.name && (
                                 <p className="text-red-500 text-sm mt-1">
-                                    {errors.email.message}
+                                    {errors.name.message}
+                                </p>
+                            )}
+                        </div>
+                        <div>
+                            <Label>Address</Label>
+                            <TextArea
+                                {...register('address')}
+                                placeholder="Address"
+                                error={!!errors.address}
+                            />
+                            {errors.address && (
+                                <p className="text-red-500 text-sm mt-1">
+                                    {errors.address.message}
                                 </p>
                             )}
                         </div>

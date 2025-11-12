@@ -55,27 +55,27 @@ const masterItems: NavItem[] = [
     {
         icon: <BoxesIcon />,
         name: 'Product',
-        path: '/product'
+        path: '/products'
     },
     {
         icon: <ScaleIcon />,
         name: 'Uom',
-        path: '/uom'
+        path: '/uoms'
     },
     {
         icon: <UsersIcon />,
         name: 'Customer',
-        path: '/customer'
+        path: '/customers'
     },
     {
         icon: <UsersIcon />,
         name: 'Supplier',
-        path: '/supplier'
+        path: '/suppliers'
     },
     {
         icon: <WarehouseIcon />,
         name: 'Warehouse',
-        path: '/warehouse'
+        path: '/warehouses'
     }
 ];
 

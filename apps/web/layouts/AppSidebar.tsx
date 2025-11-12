@@ -2,13 +2,12 @@
 
 import { useSidebar } from '../context/SidebarContext';
 import {
-    ArrowDownToLineIcon,
-    ArrowRightLeftIcon,
     BoxesIcon,
     EllipsisIcon,
     LogOutIcon,
     PencilIcon,
     ScaleIcon,
+    TruckIcon,
     UserIcon,
     UsersIcon,
     WarehouseIcon
@@ -25,19 +24,9 @@ type NavItem = {
 
 const operationItems: NavItem[] = [
     {
-        icon: <ArrowDownToLineIcon />,
-        name: 'Outbound',
-        path: '/outbound-operation'
-    },
-    {
-        icon: <ArrowDownToLineIcon />,
-        name: 'Inbound',
-        path: '/inbound-operation'
-    },
-    {
-        icon: <ArrowRightLeftIcon />,
-        name: 'Stock Transfer',
-        path: '/stock-transfer'
+        icon: <TruckIcon />,
+        name: 'Order',
+        path: '/order'
     },
     {
         icon: <PencilIcon />,
@@ -54,8 +43,8 @@ const masterItems: NavItem[] = [
     },
     {
         icon: <BoxesIcon />,
-        name: 'Product',
-        path: '/products'
+        name: 'Item',
+        path: '/items'
     },
     {
         icon: <ScaleIcon />,
@@ -66,11 +55,6 @@ const masterItems: NavItem[] = [
         icon: <UsersIcon />,
         name: 'Customer',
         path: '/customers'
-    },
-    {
-        icon: <UsersIcon />,
-        name: 'Supplier',
-        path: '/suppliers'
     },
     {
         icon: <WarehouseIcon />,

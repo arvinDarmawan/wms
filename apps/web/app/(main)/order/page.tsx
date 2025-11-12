@@ -4,9 +4,9 @@ import Card from '@/components/display/Card';
 import Label from '@/components/input/Label';
 import React from 'react';
 
-export default function StockTransfer() {
+export default function Order() {
     return (
-        <Card title="Stock Transfer">
+        <Card title="Order">
             <Label>In Progress</Label>
         </Card>
     );

@@ -6,15 +6,6 @@ The Warehouse Management System (WMS) is a web-based application designed to man
 
 ---
 
-## Features
-
-- User authentication
-- Product inventory tracking
-- Stock in/out management
-- Order management
-
----
-
 ## Tech Stack
 
 - **Frontend:** Node.js, TypeScript, NestJS

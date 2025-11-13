@@ -9,12 +9,14 @@ import { JwtGuard } from "./auth/guards/jwt.guard";
 import { JwtStrategy } from "./auth/strategy/jwt.strategy";
 import { APP_GUARD } from "@nestjs/core";
 import { ConfigModule } from "@nestjs/config";
+import { RoleModule } from "./role/role.module";
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule,
     UserModule,
+    RoleModule,
     WarehouseModule,
     CustomerModule,
     UomModule,

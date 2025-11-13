@@ -3,6 +3,7 @@
 import Button from '@/components/action/Button';
 import Input from '@/components/input/InputField';
 import Label from '@/components/input/Label';
+import { useAuth } from '@/context/AuthContext';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -16,6 +17,7 @@ interface LoginForm {
 
 export default function LoginForm() {
     const router = useRouter();
+    const { setUser } = useAuth();
 
     const schema = Yup.object().shape({
         email: Yup.string().required('Email is required'),
@@ -44,7 +46,8 @@ export default function LoginForm() {
             });
             if (!res.ok) throw new Error('Failed to login');
 
-            await res.json();
+            const resData = await res.json();
+            setUser(resData);
 
             router.push('/order');
         } catch (err) {

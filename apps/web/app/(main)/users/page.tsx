@@ -72,7 +72,7 @@ export default function UserPage() {
                 if (!res.ok) throw new Error('Failed to fetch users');
 
                 const response = await res.json();
-                setUsers(response.data);
+                setUsers(response.data || []);
                 setTotal(response.total || 0);
                 setPage(response.page || 1);
             } catch (err) {

@@ -4,7 +4,7 @@ import * as bcrypt from "bcrypt";
 
 import { UserService } from "src/user/user.service";
 import { UserEntity } from "src/user/user.entity";
-import { AccessToken } from "./types/access-token";
+import { LoginResponseDto } from "./dto/login-response.dto";
 
 @Injectable()
 export class AuthService {
@@ -25,8 +25,12 @@ export class AuthService {
     return user;
   }
 
-  async login(user: UserEntity): Promise<AccessToken> {
+  async login(user: UserEntity): Promise<LoginResponseDto> {
     const payload = { email: user.email, userId: user.id };
-    return { access_token: this.jwtService.sign(payload) };
+    return {
+      access_token: this.jwtService.sign(payload),
+      email: user.email,
+      fullName: user.fullName,
+    };
   }
 }

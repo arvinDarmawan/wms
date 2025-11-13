@@ -1,4 +1,5 @@
 import './globals.css';
+import { AuthProvider } from '@/context/AuthContext';
 import { SidebarProvider } from '@/context/SidebarContext';
 import { Outfit } from 'next/font/google';
 
@@ -14,7 +15,9 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${outfit.className}`}>
-                <SidebarProvider>{children}</SidebarProvider>
+                <AuthProvider>
+                    <SidebarProvider>{children}</SidebarProvider>
+                </AuthProvider>
             </body>
         </html>
     );

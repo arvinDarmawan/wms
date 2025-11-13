@@ -105,7 +105,7 @@ export default function CustomerPage() {
                 if (!res.ok) throw new Error('Failed to fetch customers');
 
                 const response = await res.json();
-                setData(response.data);
+                setData(response.data || []);
                 setTotal(response.total || 0);
                 setPage(response.page || 1);
             } catch (err) {

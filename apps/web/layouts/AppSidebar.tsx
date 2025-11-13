@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuth } from '../context/AuthContext';
 import { useSidebar } from '../context/SidebarContext';
 import {
     BoxesIcon,
@@ -73,6 +74,7 @@ const otherItems: NavItem[] = [
 
 const AppSidebar: React.FC = () => {
     const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
+    const { user } = useAuth();
     const pathname = usePathname();
 
     const renderMenuItems = (navItems: NavItem[]) => (
@@ -133,13 +135,13 @@ const AppSidebar: React.FC = () => {
                         : 'justify-start'
                 }`}>
                 <div className="flex flex-col">
-                    {isExpanded || isHovered || isMobileOpen ? (
+                    {user && (isExpanded || isHovered || isMobileOpen) ? (
                         <>
                             <span className="block font-medium text-gray-700 text-theme-sm">
-                                Musharof Chowdhury
+                                Hi, {user.fullName}
                             </span>
                             <span className="mt-0.5 block text-theme-xs text-gray-500">
-                                randomuser@pimjo.com
+                                {user.email}
                             </span>
                         </>
                     ) : null}

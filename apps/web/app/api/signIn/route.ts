@@ -25,7 +25,13 @@ export async function POST(request: Request) {
             maxAge: 60 * 60 * 24 * 1 // 1 day
         });
 
-        return NextResponse.json(null, { status: res.status });
+        return NextResponse.json(
+            {
+                email: responseData.data.email,
+                fullName: responseData.data.fullName
+            },
+            { status: res.status }
+        );
     } catch (error) {
         console.error('POST /signIn error:', error);
         return NextResponse.json(

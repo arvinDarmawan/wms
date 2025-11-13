@@ -1,3 +1,5 @@
-import { AccessToken } from "../types/access-token";
-
-export type LoginResponseDto = AccessToken;
+export type LoginResponseDto = {
+  access_token: string;
+  fullName: string;
+  email: string;
+};

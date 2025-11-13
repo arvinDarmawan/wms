@@ -67,7 +67,7 @@ export default function UserPage() {
         async (pageNumber = 1, searchQuery = '') => {
             try {
                 const res = await fetch(
-                    `http://localhost:3001/api/users?page=${pageNumber}&limit=${limit}&search=${searchQuery}`
+                    `/api/users?page=${pageNumber}&limit=${limit}&search=${searchQuery}`
                 );
                 if (!res.ok) throw new Error('Failed to fetch users');
 
@@ -111,10 +111,9 @@ export default function UserPage() {
     const confirmDelete = async () => {
         if (!userToDelete) return;
         try {
-            const res = await fetch(
-                `http://localhost:3001/api/users/${userToDelete.id}`,
-                { method: 'DELETE' }
-            );
+            const res = await fetch(`/api/users/${userToDelete.id}`, {
+                method: 'DELETE'
+            });
             if (!res.ok) throw new Error('Failed to delete user');
             await res.json();
             fetchUsers(page, search);
@@ -130,14 +129,12 @@ export default function UserPage() {
     const onSubmit = async (data: UserForm) => {
         if (isEditing && selectedUser) {
             try {
-                const res = await fetch(
-                    `http://localhost:3001/api/users/${selectedUser.id}`,
-                    {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    }
-                );
+                const res = await fetch(`/api/users/${selectedUser.id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
                 if (!res.ok) throw new Error('Failed to update user');
                 await res.json();
             } catch (err) {
@@ -146,7 +143,7 @@ export default function UserPage() {
             }
         } else {
             try {
-                const res = await fetch('http://localhost:3001/api/users', {
+                const res = await fetch('/api/users', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)

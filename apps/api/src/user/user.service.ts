@@ -79,6 +79,7 @@ export class UserService {
     if (!data) {
       throw new HttpException("User not found", 404);
     }
+
     return data;
   }
 
@@ -90,9 +91,6 @@ export class UserService {
       },
     });
 
-    if (!data) {
-      throw new HttpException("User not found", 404);
-    }
     return data;
   }
 
